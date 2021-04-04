@@ -15,10 +15,7 @@ def form_name_view(request):
         form = forms.FormName(request.POST)
         if form.is_valid():
             print(f'name: {form.cleaned_data["name"]}')
-        else:
-            print('FORM DATA INVALID')
-
-        form = forms.FormName
+            form = forms.FormName
 
     ctx = {'form': form}
     return render(request, 'forms_app/form.html', context=ctx)
