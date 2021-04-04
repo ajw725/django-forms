@@ -2,16 +2,16 @@ from django import forms
 from django.core import validators
 
 
-def z_name(value):
-    print(f'VALUE: {value}')
-    if value[0].lower() != 'z':
-        raise forms.ValidationError('Name must start with z')
-
-
 class FormName(forms.Form):
-    name = forms.CharField(validators=[z_name])
+    name = forms.CharField()
     email = forms.EmailField()
+    email_confirmation = forms.EmailField(label='Confirm email')
     text = forms.CharField(widget=forms.Textarea)
-    bot_catcher = forms.CharField(required=False,
-                                  widget=forms.HiddenInput,
-                                  validators=[validators.MaxLengthValidator(0)])
+
+    def clean(self):
+        clean_data = super().clean()
+        email = clean_data['email']
+        conf = clean_data['email_confirmation']
+
+        if email != conf:
+            raise forms.ValidationError('Email confirmation does not match email')
